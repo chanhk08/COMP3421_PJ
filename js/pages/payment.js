@@ -1,6 +1,6 @@
 /**
  * js/pages/payment.js
- * 處理付款頁面的邏輯
+ * (Corrected Return Value Version)
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -9,50 +9,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         return;
     }
-    
-    // 將購物車商品載入到訂單摘要中
+
     const cartItems = await loadOrderSummary(currentUser.user_id);
 
-    // 為付款表單綁定提交事件
     document.getElementById('payment-form').addEventListener('submit', (e) => {
-        e.preventDefault(); // 防止表單傳統提交
+        e.preventDefault();
         handlePayment(currentUser.user_id, cartItems);
     });
 });
 
-/**
- * 處理完整的下單與付款流程
- * @param {number} userId 
- * @param {Array} cartItems - 從購物車獲取的商品陣列
- */
 
+/**
+ * Loads and renders the order summary.
+ * This function MUST always return an array.
+ * @param {number} userId - The ID of the current user.
+ * @returns {Promise<Array>} A promise that resolves with the array of cart items.
+ */
 async function loadOrderSummary(userId) {
-    // 獲取將要操作的 DOM 元素
     const tbody = document.getElementById('order-items-tbody');
     const totalEl = document.getElementById('order-total');
     const paymentBtn = document.getElementById('confirm-payment-btn');
     
-    // 顯示初始的載入中訊息
-    tbody.innerHTML = '<tr><td colspan="4">正在載入訂單摘要...</td></tr>';
-    paymentBtn.disabled = true; // 載入完成前禁用付款按鈕
+    tbody.innerHTML = '<tr><td colspan="4">Loading order summary...</td></tr>';
+    paymentBtn.disabled = true;
 
     try {
-        // 呼叫 cart.js 中的函式來獲取購物車內容
         const cartItems = await getCartItems(userId);
         
-        // 情況一：購物車為空
         if (!cartItems || cartItems.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">您的購物車是空的，無法結帳。</td></tr>';
-            totalEl.textContent = '$0.00';
-            // 保持付款按鈕禁用
-            return []; // 回傳空陣列
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Your shopping cart is empty.</td></tr>';
+            return []; // ★ 修正：回傳一個空陣列
         }
 
-        // 情況二：成功獲取商品，開始渲染
-        tbody.innerHTML = ''; // 清空「載入中」提示
+        tbody.innerHTML = '';
         let totalAmount = 0;
 
-        // 遍歷每一個商品，建立表格的一行
         cartItems.forEach(item => {
             const subtotal = item.price * item.quantity;
             totalAmount += subtotal;
@@ -66,74 +57,81 @@ async function loadOrderSummary(userId) {
             tbody.appendChild(row);
         });
 
-        // 更新總金額
         totalEl.textContent = `$${totalAmount.toFixed(2)}`;
-        paymentBtn.disabled = false; // 啟用付款按鈕
+        paymentBtn.disabled = false;
 
-        // 將獲取到的商品陣列回傳，供 handlePayment 函式使用
-        return cartItems;
+        return cartItems; // ★ 修正：成功時回傳商品陣列
 
     } catch (error) {
-        // 情況三：API 請求失敗
-        tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">載入訂單摘要失敗: ${error.message}</td></tr>`;
-        totalEl.textContent = '$0.00';
-        // 保持付款按鈕禁用
-        return []; // 回傳空陣列
+        tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Failed to load summary: ${error.message}</td></tr>`;
+        return []; // ★ 修正：錯誤時也回傳一個空陣列
     }
 }
 
+
+/**
+ * Handles the entire order creation and payment process.
+ * @param {number} userId 
+ * @param {Array} cartItems 
+ */
 async function handlePayment(userId, cartItems) {
+    // ★ 新增：在函式開頭增加一道防線
+    if (!cartItems || cartItems.length === 0) {
+        alert("Your cart is empty. Please add items before proceeding to payment.");
+        return;
+    }
+
     const paymentBtn = document.getElementById('confirm-payment-btn');
     const messageDiv = document.getElementById('message');
     
-    // --- ★ 新增：讀取並驗證信用卡資訊 ---
     const cardNumber = document.getElementById('card-number').value;
     const cardExpiry = document.getElementById('card-expiry').value;
     const cardCvc = document.getElementById('card-cvc').value;
 
     if (!cardNumber || !cardExpiry || !cardCvc) {
         messageDiv.style.color = 'red';
-        messageDiv.textContent = '請填寫所有信用卡資訊。';
+        messageDiv.textContent = 'Please fill out all payment information.';
         return;
     }
     
     paymentBtn.disabled = true;
     messageDiv.style.color = '#007bff';
-    messageDiv.textContent = '正在處理付款，請稍候...';
+    messageDiv.textContent = 'Processing payment...';
 
-    // --- 建立訂單並付款的流程 ---
     try {
-        const orderData = { /* ... */ };
+        // 現在，傳遞給 apiRequest 的 orderData 中的 items 欄位
+        // 一定是一個有效的陣列（即使是空的），不會是 undefined。
+        const orderData = {
+            user_id: userId,
+            shipping_address: "123 Default Address, Hong Kong",
+            items: cartItems.map(item => ({
+                item_id: item.item_id,
+                quantity: item.quantity
+            }))
+        };
         const orderResult = await apiRequest('orders.php', 'POST', orderData);
         const newOrderId = orderResult.order_id;
         
+        // Step 2: Create Payment
         const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-        // --- ★ 修改：將（模擬的）信用卡資訊加入請求中 ---
         const paymentData = {
             order_id: newOrderId,
             amount: totalAmount,
             payment_method: 'Credit Card',
             transaction_id: 'TXN_' + Date.now(),
-            // 在真實應用中，這裡應該是支付閘道回傳的 token，而非原始卡號
             card_last4: cardNumber.slice(-4) 
         };
-
         await apiRequest('payments.php', 'POST', paymentData);
 
-        // --- 第 3 步：清空購物車並顯示成功訊息 ---
+        // Step 3: Success Actions
         await clearCart(userId);
-        
         messageDiv.style.color = 'green';
-        messageDiv.textContent = '付款成功！感謝您的購買。頁面將在 3 秒後跳轉回首頁。';
-        
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 3000);
+        messageDiv.textContent = 'Payment successful! Redirecting to homepage in 3 seconds.';
+        setTimeout(() => { window.location.href = 'index.html'; }, 3000);
 
     } catch (error) {
         messageDiv.style.color = 'red';
-        messageDiv.textContent = `處理失敗：${error.message}`;
-        paymentBtn.disabled = false; // 讓使用者可以重試
+        messageDiv.textContent = `Processing failed: ${error.message}`;
+        paymentBtn.disabled = false;
     }
 }
