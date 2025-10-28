@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>使用者登入</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>登入</h1>
+        <form id="login-form">
+            <input type="text" name="username" placeholder="使用者名稱" required>
+            <input type="password" name="password" placeholder="密碼" required>
+            <button type="submit">登入</button>
+        </form>
+        <div id="message"></div>
+        <p>還沒有帳號？ <a href="register.html">點此註冊</a></p>
+    </div>
+
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+
+    <script src="js/pages/login.js"></script>
+</body>
+</html>

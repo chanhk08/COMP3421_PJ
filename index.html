@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的商店 - 商品列表</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        
+        /* --- 導覽列樣式 --- */
+        .product-info {
+            margin: 20px;
+        }
+
+        .view-detail-link {
+           display: block;
+           width: 100%;
+           padding: 12px 0;
+           margin-top: auto; /* 讓按鈕固定在卡片底部 */
+           background-color: #007bff;
+           color: white;
+           text-align: center;
+           text-decoration: none;
+           font-weight: bold;
+           transition: background-color 0.2s;
+        }
+        
+        view-detail-link:hover {
+           background-color: #0056b3;
+        }
+
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .view-detail-link:hover {
+           background-color: #0056b3;
+        }
+        h1 { text-align: center; color: #333; }
+        .search-container { margin-bottom: 20px; }
+        #search-input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        #product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
+        .add-to-cart-btn { display: block; width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 1em; }
+        /* 其他樣式省略 */
+    </style>
+</head>
+<body>
+
+    <!-- ===== 導覽列 ===== -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">我的商店</a>
+        <div class="nav-links" id="nav-links">
+            <!-- 預設顯示登入/註冊連結 -->
+            <a href="login.html">登入</a>
+            <a href="register.html">註冊</a>
+        </div>
+    </nav>
+
+    <main class="main-content-area">
+        <div class="container">
+            <h1>我們的商品</h1>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="搜尋商品名稱或描述...">
+            </div>
+            <div id="product-list"></div>
+        </div>
+    </main>
+
+    <div id="footer-container">
+        <!-- 頁尾將由 footer.js 動態填充 -->
+    </div>
+
+    <!-- 引入所有需要的模組 -->
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/cart.js"></script>
+    <script src="js/modules/products.js"></script>
+    <script src="js/modules/navigator.js"></script>
+    <script src="js/modules/footer.js"></script>
+
+    <!-- 最後，引入此頁面專屬的啟動腳本 -->
+    <script src="js/pages/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>確認訂單與付款</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .payment-container { max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; }
+        .order-summary table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .order-summary th, .order-summary td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .order-summary tfoot td { font-weight: bold; font-size: 1.2em; }
+        
+        /* --- 信用卡表單樣式 --- */
+        #payment-form { margin-top: 30px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
+        .form-group input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-size: 1em;
+        }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+
+        .payment-btn { width: 100%; padding: 15px; font-size: 1.2em; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .payment-btn:disabled { background-color: #ccc; }
+        #message { text-align: center; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h1>確認訂單</h1>
+        <div class="order-summary">
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>單價</th>
+                        <th>數量</th>
+                        <th>小計</th>
+                    </tr>
+                </thead>
+                <!-- ★ 確保 tbody 有 id="order-items-tbody" -->
+                <tbody id="order-items-tbody">
+                    <!-- 訂單項目將由 JS 動態載入 -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">訂單總計</td>
+                        <!-- ★ 確保顯示總金額的 td 有 id="order-total" -->
+                        <td id="order-total"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- --- 新增的信用卡表單 --- -->
+        <form id="payment-form">
+            <h2>付款資訊</h2>
+            <div class="form-group">
+                <label for="card-number">信用卡卡號</label>
+                <input type="text" id="card-number" placeholder="•••• •••• •••• ••••" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="card-expiry">有效期限 (MM/YY)</label>
+                    <input type="text" id="card-expiry" placeholder="MM/YY" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-cvc">安全碼 (CVC)</label>
+                    <input type="text" id="card-cvc" placeholder="CVC" required>
+                </div>
+            </div>
+            <button type="submit" id="confirm-payment-btn" class="payment-btn">確認付款</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <!-- 引入 JS 檔案 -->
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/cart.js"></script>
+    <script src="js/pages/payment.js"></script>
+</body>
+</html>

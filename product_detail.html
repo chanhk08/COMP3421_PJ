@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品詳情</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- 假設您有通用的 CSS -->
+    <style>
+
+        
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1000px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .product-gallery img { width: 100%; border-radius: 8px; }
+        .product-info .product-name { font-size: 2.5em; margin: 0 0 15px; }
+        .product-info .product-price { font-size: 2em; font-weight: bold; color: #e53935; margin-bottom: 20px; }
+        .product-info .product-description { font-size: 1em; line-height: 1.6; color: #555; margin-bottom: 20px; }
+        .stock-status { font-weight: bold; margin-bottom: 25px; }
+        .in-stock { color: #28a745; }
+        .out-of-stock { color: #757575; }
+
+        /* --- ★ 修改與新增的樣式 ★ --- */
+        .add-to-cart-controls { display: flex; gap: 15px; align-items: center; }
+        .add-to-cart-controls input[type="number"] {
+            width: 70px;
+            padding: 14px;
+            font-size: 1.1em;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-to-cart-btn { flex-grow: 1; padding: 15px; font-size: 1.1em; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+        .add-to-cart-btn:hover:not(:disabled) { background-color: #0056b3; }
+        .add-to-cart-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        #message { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">我的商店</a>
+        <div class="nav-links" id="nav-links">
+            <a href="login.html">登入</a>
+            <a href="register.html">註冊</a>
+        </div>
+    </nav>
+    <main class="main-content-area">
+        <div class="container">
+            <div class="product-gallery">
+                <img id="product-image" src="https://via.placeholder.com/400?text=Loading..." alt="正在載入商品圖片...">
+            </div>
+            <div class="product-info">
+                <h1 id="product-name">正在載入商品名稱...</h1>
+                <div id="product-price"></div>
+                <p id="product-description"></p>
+                <div id="stock-status"></div>
+
+                <!-- --- ★ 修改後的結構 ★ --- -->
+                <div class="add-to-cart-controls">
+                    <input type="number" id="quantity-input" value="1" min="1" disabled>
+                    <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>加入購物車</button>
+                </div>
+
+                <div id="message"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container">
+        <!-- 頁尾將由 footer.js 動態填充 -->
+    </div>
+
+    <!-- 引入 JS 檔案 (保持不變) -->
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/modules/cart.js"></script>
+    <script src="js/pages/item-detail.js"></script>
+    <script src="js/modules/navigator.js"></script>
+    <script src="js/modules/footer.js"></script>
+</body>
+</html>

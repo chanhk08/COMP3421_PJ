@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單詳情</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        
+        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; }
+        h1 { text-align: center; }
+        .order-summary { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .order-summary p { font-size: 1.1em; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; }
+        td.align-right { text-align: right; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">我的商店</a>
+        <div class="nav-links" id="nav-links">...</div>
+    </nav>
+
+    <main class="main-content-area">
+        <div class="container">
+            <h1 id="order-title">訂單詳情</h1>
+            <div class="order-summary">
+                <p><strong>訂單狀態:</strong> <span id="order-status"></span></p>
+                <p><strong>訂單總金額:</strong> <span id="order-total"></span></p>
+            </div>
+            <h2>訂單內容</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品名稱</th>
+                        <th>單價</th>
+                        <th>數量</th>
+                        <th class="align-right">小計</th>
+                    </tr>
+                </thead>
+                <tbody id="order-items-tbody">
+                    <!-- 商品項目將由 JS 動態載入 -->
+                </tbody>
+            </table>
+            <a href="order_record.html" style="display:block; margin-top:20px;">返回訂單列表</a>
+        </div>
+    </main>
+    <div id="footer-container">
+        <!-- 頁尾將由 footer.js 動態填充 -->
+    </div>
+
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/pages/order-details.js"></script>
+    <script src="js/modules/navigator.js"></script>
+    <script src="js/modules/footer.js"></script>
+</body>
+</html>

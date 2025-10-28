@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人資料</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- 假設您有通用的 CSS -->
+    <style>
+
+        /* --- 個人資料容器樣式 --- */
+        .profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .profile-container h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        #profile-form p {
+            color: #555;
+            font-size: 1.1em;
+        }
+        #profile-form p strong {
+            color: #333;
+            margin-right: 8px;
+        }
+        #profile-form label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        #profile-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button[type="submit"], #logout-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+        }
+        #logout-btn {
+            background-color: #6c757d;
+        }
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .order-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 500;
+        }
+        .order-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- 導覽列 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">我的商店</a>
+        <div class="nav-links" id="nav-links">
+            <!-- 將由 JS 動態更新 -->
+            <a href="login.html">登入</a>
+            <a href="register.html">註冊</a>
+        </div>
+    </nav>
+    
+    <!-- 個人資料主要內容 -->
+    <main class="main-content-area">
+        <div class="profile-container">
+            <h1>我的個人資料</h1>
+            <form id="profile-form">
+                <p><strong>使用者名稱:</strong> <span id="username"></span></p>
+                <p><strong>電子郵件:</strong> <span id="email"></span></p>
+
+                <label for="full_name">全名:</label>
+                <input type="text" id="full_name" name="full_name">
+
+                <label for="address">地址:</label>
+                <input type="text" id="address" name="address">
+
+                <label for="phone_number">電話號碼:</label>
+                <input type="tel" id="phone_number" name="phone_number">
+
+                <button type="submit">更新資料</button>
+            </form>
+
+            <button id="logout-btn">登出</button>
+            <div id="message"></div>
+            <a href="order_record.html" class="order-link">查看我的訂單紀錄</a>
+        </div>
+    </main>
+
+    <div id="footer-container">
+        <!-- 頁尾將由 footer.js 動態填充 -->
+    </div>
+
+    <!-- 引入所有必要的 JS 檔案 -->
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script src="js/pages/user-profile.js"></script>
+    <script src="js/modules/navigator.js"></script>
+    <script src="js/modules/footer.js"></script>
+
+</body>
+</html>
