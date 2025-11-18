@@ -47,31 +47,64 @@ switch ($method) {
  */
 function handle_get_items($pdo) {
     try {
+        // 先判斷是否為 item_id 單筆查詢
         if (isset($_GET['item_id'])) {
-            // 獲取單一商品 (邏輯不變)
             $stmt = $pdo->prepare("SELECT * FROM items WHERE item_id = ?");
             $stmt->execute([$_GET['item_id']]);
             $item = $stmt->fetch();
             if ($item) {
                 echo json_encode($item);
+                return;
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'Item not found.']);
+                return;
             }
-        } elseif (isset($_GET['search'])) {
-            // ★ 新增：處理搜尋請求
-            $keyword = '%' . $_GET['search'] . '%'; // 使用 % 進行模糊匹配
-            // 在 name 或 description 欄位中尋找關鍵字
-            $stmt = $pdo->prepare("SELECT item_id, name, price, stock_quantity, image_url FROM items WHERE name LIKE ? OR description LIKE ? ORDER BY name ASC");
-            $stmt->execute([$keyword, $keyword]);
-            $items = $stmt->fetchAll();
-            echo json_encode($items);
-        } else {
-            // 獲取所有商品列表 (邏輯不變)
-            $stmt = $pdo->query("SELECT item_id, name, price, stock_quantity, image_url FROM items ORDER BY created_at DESC");
-            $items = $stmt->fetchAll();
-            echo json_encode($items);
         }
+
+        // 以下為多筆商品查詢邏輯
+        $params = [];
+        $sql = "SELECT i.item_id, i.name, i.price, i.stock_quantity, i.image_url, i.available
+        FROM items i";
+        
+        $whereClauses = [];
+        $joinItemCategories = false;
+
+        if (isset($_GET['categories']) && !empty($_GET['categories'])) {
+            $categoryIds = explode(',', $_GET['categories']);
+            $placeholders = implode(',', array_fill(0, count($categoryIds), '?'));
+            $joinItemCategories = true;
+            $sql .= " JOIN item_categories ic ON i.item_id = ic.item_id";
+            $whereClauses[] = "ic.category_id IN ($placeholders)";
+            $params = array_merge($params, $categoryIds);
+        }
+
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $whereClauses[] = "(i.name LIKE ? OR i.description LIKE ?)";
+            $keyword = '%' . $_GET['search'] . '%';
+            $params[] = $keyword;
+            $params[] = $keyword;
+        }
+
+        if (!empty($whereClauses)) {
+            $sql .= " WHERE " . implode(' AND ', $whereClauses);
+        }
+
+        if ($joinItemCategories) {
+            $sql .= " GROUP BY i.item_id
+                      HAVING COUNT(DISTINCT ic.category_id) = ?";
+            $params[] = count($categoryIds);
+        } else {
+            $sql .= " GROUP BY i.item_id";
+        }
+
+        $sql .= " ORDER BY i.created_at DESC";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $items = $stmt->fetchAll();
+
+        echo json_encode($items);
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
@@ -92,16 +125,17 @@ function handle_post_items($pdo) {
     }
 
     try {
-        $sql = "INSERT INTO items (name, description, price, stock_quantity, category_id, image_url) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO items (name, description, price, stock_quantity, image_url, available) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             $data['name'],
             $data['description'] ?? null,
             $data['price'],
             $data['stock_quantity'],
-            $data['category_id'] ?? null,
-            $data['image_url'] ?? null
+            $data['image_url'] ?? null,
+            $data['available'] ?? 1
         ]);
+
 
         $itemId = $pdo->lastInsertId();
         http_response_code(201); // Created
@@ -137,7 +171,7 @@ function handle_put_items($pdo) {
     try {
         $updateFields = [];
         $params = [];
-        $allowedFields = ['name', 'description', 'price', 'stock_quantity', 'category_id', 'image_url'];
+        $allowedFields = ['name', 'description', 'price', 'stock_quantity', 'category_id', 'image_url', 'available'];
 
         foreach ($allowedFields as $field) {
             if (isset($data[$field])) {

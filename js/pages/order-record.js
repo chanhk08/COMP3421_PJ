@@ -26,21 +26,21 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function loadUserOrders(userId) {
     const tbody = document.getElementById('orders-table-body');
-    tbody.innerHTML = '<tr><td colspan="4">正在載入您的訂單紀錄...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4">Loading your order history...</td></tr>';
 
     try {
         const orders = await apiRequest(`orders.php?user_id=${userId}`);
         
         if (!orders || orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="order-empty">您目前沒有任何訂單紀錄。</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" class="order-empty">You currently have no orders.</td></tr>';
             return;
         }
 
-        tbody.innerHTML = ''; // 清空載入提示
+        tbody.innerHTML = ''; // clear loading placeholder
 
         orders.forEach(order => {
             const tr = document.createElement('tr');
-            // 將 PHP 回傳的日期格式化為本地習慣的日期時間格式
+            // Format the date returned by PHP to a local date/time string
             const orderDate = new Date(order.order_date).toLocaleString('zh-HK');
             
             tr.innerHTML = `
@@ -53,6 +53,6 @@ async function loadUserOrders(userId) {
         });
 
     } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">載入訂單失敗: ${error.message}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Failed to load orders: ${error.message}</td></tr>`;
     }
 }

@@ -15,7 +15,6 @@ if ($method == 'OPTIONS') {
     exit();
 }
 
-// 在真實應用中，user_id 應從 JWT token 或 session 中獲取，以策安全
 $user_id = $_GET['user_id'] ?? null;
 
 switch ($method) {
@@ -39,7 +38,7 @@ switch ($method) {
 
 
 /**
- * 讀取購物車內容
+ * Get cart items
  * URL: /api/cart.php?user_id=1
  */
 function handle_get_cart($pdo, $user_id) {
@@ -68,7 +67,7 @@ function handle_get_cart($pdo, $user_id) {
 
 
 /**
- * 新增商品到購物車 (或更新數量)
+ * add items
  */
 function handle_post_cart($pdo) {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -106,7 +105,7 @@ function handle_post_cart($pdo) {
 
 
 /**
- * 直接修改購物車中某個商品的數量
+ * edit items
  */
 function handle_put_cart($pdo) {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -119,7 +118,7 @@ function handle_put_cart($pdo) {
     
     $quantity = intval($data['quantity']);
     if ($quantity <= 0) {
-        // 如果數量為 0 或更少，則應執行刪除操作
+        // 0 || 0< will be removed 
         return handle_delete_cart($pdo, $data); 
     }
 
@@ -142,7 +141,7 @@ function handle_put_cart($pdo) {
 
 
 /**
- * 從購物車移除商品 (單個或全部)
+ * remove items
  */
 function handle_delete_cart($pdo, $request_data = null) {
     $data = $request_data ?? json_decode(file_get_contents('php://input'), true);
@@ -158,13 +157,13 @@ function handle_delete_cart($pdo, $request_data = null) {
     
     try {
         if ($item_id) {
-            // 情況 1: 移除單一商品
+            // remove signle cart item
             $sql = "DELETE FROM cart_items WHERE user_id = ? AND item_id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$user_id, $item_id]);
             $message = 'Item removed from cart.';
         } else {
-            // 情況 2: 清空整個購物車
+            // remove whole cart items
             $sql = "DELETE FROM cart_items WHERE user_id = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$user_id]);

@@ -1,43 +1,66 @@
 /**
  * js/pages/order-details.js
- * 處理單筆訂單詳情的頁面邏輯
+ * 處理訂單詳情頁，符合新的資料表欄位設計
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
+//import { initNavigator } from '../modules/navigator.js';
+//import { initFooter } from '../modules/footer.js';
+
+document.addEventListener('DOMContentLoaded', () => {
     const currentUser = getCurrentUser();
     if (!currentUser) {
+        // Redirect to login if not signed in
         window.location.href = 'login.html';
         return;
     }
     initNavigator('nav-links');
-    initFooter('footer-container'); 
+    //initFooter('footer-container');
+
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('order_id');
 
+    console.log('Order ID retrieved:', orderId); // debug
+
     if (!orderId) {
-        document.querySelector('.container').innerHTML = '<h1>錯誤：未提供訂單編號。</h1>';
+        document.querySelector('.container').innerHTML = '<h1>Error: Order ID not provided.</h1>';
         return;
     }
-    
-    await loadOrderDetails(orderId);
+
+    loadOrderDetails(orderId);
 });
 
 async function loadOrderDetails(orderId) {
-    const container = document.querySelector('.container');
     try {
-        const orderData = await apiRequest(`orders.php?order_id=${orderId}`);
+        const order = await apiRequest(`orders.php?order_id=${orderId}`);
+        console.log('API returned order data:', order); // debug
 
-        // 填充訂單主體資訊
-        document.getElementById('order-title').textContent = `訂單 #${orderData.order_id} 詳情`;
-        document.getElementById('order-status').textContent = orderData.status;
-        document.getElementById('order-total').textContent = `$${parseFloat(orderData.total_amount).toFixed(2)}`;
+        if (!order || !order.order_id) {
+            throw new Error('Order data not found');
+        }
 
-        // 填充商品項目列表
+        // Populate basic order info
+        document.getElementById('order-title').textContent = `Order #${order.order_id} Details`;
+        document.getElementById('order-id').textContent = order.order_id;
+        document.getElementById('order-date').textContent = new Date(order.order_date).toLocaleString();
+        document.getElementById('order-status').textContent = order.status;
+        document.getElementById('order-total').textContent = `$${parseFloat(order.total_amount).toFixed(2)}`;
+
+        // Fill shipping information (adapted to updated address fields)
+        const fullAddress = [
+            order.shipping_address,
+            order.shipping_city,
+            order.shipping_postal_code
+        ].filter(part => part).join(', ');
+        document.getElementById('recipient-name').textContent = order.recipient_name;
+        document.getElementById('recipient-phone').textContent = order.recipient_phone;
+        document.getElementById('shipping-address').textContent = fullAddress;
+        document.getElementById('order-remark').textContent = order.remark || '—';
+
+        // Populate order item rows
         const tbody = document.getElementById('order-items-tbody');
-        tbody.innerHTML = ''; // 清空載入提示
-        
-        if (orderData.items && orderData.items.length > 0) {
-            orderData.items.forEach(item => {
+        tbody.innerHTML = '';
+        if (order.items && order.items.length > 0) {
+            order.items.forEach(item => {
                 const subtotal = item.price_per_item * item.quantity;
                 const row = `
                     <tr>
@@ -50,10 +73,11 @@ async function loadOrderDetails(orderId) {
                 tbody.innerHTML += row;
             });
         } else {
-            tbody.innerHTML = '<tr><td colspan="4">此訂單無商品項目。</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4">This order has no items.</td></tr>';
         }
 
     } catch (error) {
-        container.innerHTML = `<h1>載入訂單失敗</h1><p style="color:red;">${error.message}</p>`;
+        console.error('載入訂單詳細資料發生錯誤:', error);
+        document.querySelector('.container').innerHTML = `<h1>Failed to load order</h1><p style="color:red;">${error.message}</p>`;
     }
 }

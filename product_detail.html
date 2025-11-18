@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品詳情</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- 假設您有通用的 CSS -->
+    <title>Product Details</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Assumes you have a common CSS file -->
     <style>
 
         
@@ -27,27 +27,27 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .add-to-cart-btn { flex-grow: 1; padding: 15px; font-size: 1.1em; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
-        .add-to-cart-btn:hover:not(:disabled) { background-color: #0056b3; }
+        .add-to-cart-btn { flex-grow: 1; padding: 15px; font-size: 1.1em; background-color: #ff751f; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+        .add-to-cart-btn:hover:not(:disabled) { background-color: #c25917;}
         .add-to-cart-btn:disabled { background-color: #ccc; cursor: not-allowed; }
         #message { margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="index.html" class="logo">我的商店</a>
+        <a href="index.html" class="logo"><img src="images/logo_2.png" style="height: 75px; width: 150px;"></a>
         <div class="nav-links" id="nav-links">
-            <a href="login.html">登入</a>
-            <a href="register.html">註冊</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
         </div>
     </nav>
     <main class="main-content-area">
         <div class="container">
             <div class="product-gallery">
-                <img id="product-image" src="https://via.placeholder.com/400?text=Loading..." alt="正在載入商品圖片...">
+                <img id="product-image" src="https://via.placeholder.com/400?text=Loading..." alt="Loading product image...">
             </div>
             <div class="product-info">
-                <h1 id="product-name">正在載入商品名稱...</h1>
+                <h1 id="product-name">Loading product name...</h1>
                 <div id="product-price"></div>
                 <p id="product-description"></p>
                 <div id="stock-status"></div>
@@ -55,7 +55,7 @@
                 <!-- --- ★ 修改後的結構 ★ --- -->
                 <div class="add-to-cart-controls">
                     <input type="number" id="quantity-input" value="1" min="1" disabled>
-                    <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>加入購物車</button>
+                    <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>Add to Cart</button>
                 </div>
 
                 <div id="message"></div>
@@ -64,10 +64,10 @@
     </main>
 
     <div id="footer-container">
-        <!-- 頁尾將由 footer.js 動態填充 -->
+        <!-- Footer will be populated by footer.js -->
     </div>
 
-    <!-- 引入 JS 檔案 (保持不變) -->
+    <!-- Include JS files (unchanged) -->
     <script src="js/modules/api.js"></script>
     <script src="js/modules/auth.js"></script>
     <script src="js/modules/cart.js"></script>

@@ -1,90 +1,224 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>確認訂單與付款</title>
+    <title>Order Confirmation & Payment</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .payment-container { max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .payment-container { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            background: #fff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
         h1 { text-align: center; }
-        .order-summary table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .order-summary th, .order-summary td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        .order-summary tfoot td { font-weight: bold; font-size: 1.2em; }
         
-        /* --- 信用卡表單樣式 --- */
-        #payment-form { margin-top: 30px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
+        /* Order summary styles */
+        .order-summary table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 30px; 
+        }
+        .order-summary th, .order-summary td { 
+            padding: 12px; 
+            border-bottom: 1px solid #eee; 
+            text-align: left; 
+        }
+        .order-summary tfoot td { 
+            font-weight: bold; 
+            font-size: 1.2em; 
+        }
+
+        /* Shipping form styles */
+        .shipping-form { 
+            margin: 30px 0; 
+            padding: 20px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            background-color: #f9f9f9; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        .form-group label { 
+            display: block; 
+            font-weight: 500; 
+            margin-bottom: 5px; 
+            color: #333; 
+        }
         .form-group input { 
             width: 100%; 
             padding: 12px; 
             border: 1px solid #ccc; 
             border-radius: 5px; 
             box-sizing: border-box; 
-            font-size: 1em;
+            font-size: 1em; 
         }
-        .form-row { display: flex; gap: 15px; }
-        .form-row .form-group { flex: 1; }
+        .form-row { 
+            display: flex; 
+            gap: 15px; 
+        }
+        .form-row .form-group { 
+            flex: 1; 
+        }
+        .form-row .form-group.full-width { 
+            flex: auto; 
+        }
 
-        .payment-btn { width: 100%; padding: 15px; font-size: 1.2em; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        .payment-btn:disabled { background-color: #ccc; }
-        #message { text-align: center; margin-top: 20px; font-weight: bold; }
+        /* Payment form styles */
+        .payment-form { 
+            margin: 30px 0; 
+            padding: 20px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            background-color: #f9f9f9; 
+        }
+        .payment-form .form-row { 
+            display: flex; 
+            gap: 15px; 
+        }
+        .payment-form .form-row .form-group { 
+            flex: 1; 
+        }
+        .payment-btn { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 1.2em; 
+            background-color: #ff751f; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+        }
+        .payment-btn:disabled { 
+            background-color: #ccc; 
+            cursor: not-allowed; 
+        }
+        #message { 
+            text-align: center; 
+            margin-top: 20px; 
+            font-weight: bold; 
+        }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="logo"><img src="images/logo_2.png" style="height: 75px; width: 150px;"></a>
+        <div class="nav-links" id="nav-links">
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </div>
+    </nav>
+
     <div class="payment-container">
-        <h1>確認訂單</h1>
+        <h1>Order Confirmation & Payment</h1>
+
+        <!-- Order Summary -->
         <div class="order-summary">
+            <h2>Order Details</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>商品</th>
-                        <th>單價</th>
-                        <th>數量</th>
-                        <th>小計</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
                     </tr>
                 </thead>
-                <!-- ★ 確保 tbody 有 id="order-items-tbody" -->
                 <tbody id="order-items-tbody">
-                    <!-- 訂單項目將由 JS 動態載入 -->
+                    <!-- Dynamically populated by JavaScript -->
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3">訂單總計</td>
-                        <!-- ★ 確保顯示總金額的 td 有 id="order-total" -->
-                        <td id="order-total"></td>
+                        <td colspan="3">Order Total</td>
+                        <td id="order-total">$0.00</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
 
-        <!-- --- 新增的信用卡表單 --- -->
+        <!-- Shipping information form -->
+        <form id="shipping-form">
+            <h2>Shipping Information</h2>
+            <div class="shipping-form">
+                <div class="form-group">
+                    <label for="full_name">Recipient Name *</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Enter recipient name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="e.g. 91234567" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address_line">Address *</label>
+                    <input type="text" id="address_line" name="address_line" placeholder="Street address" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City/Region *</label>
+                        <input type="text" id="city" name="city" placeholder="e.g. Hong Kong" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code *</label>
+                        <input type="text" id="postal_code" name="postal_code" placeholder="e.g. 000000" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="remark">Delivery Notes (optional)</label>
+                    <input type="text" id="remark" name="remark" placeholder="Delivery instructions or special requests">
+                </div>
+            </div>
+        </form>
+
+        <!-- Payment information form -->
         <form id="payment-form">
-            <h2>付款資訊</h2>
-            <div class="form-group">
-                <label for="card-number">信用卡卡號</label>
-                <input type="text" id="card-number" placeholder="•••• •••• •••• ••••" required>
-            </div>
-            <div class="form-row">
+            <h2>Payment Method</h2>
+            <div class="payment-form">
                 <div class="form-group">
-                    <label for="card-expiry">有效期限 (MM/YY)</label>
-                    <input type="text" id="card-expiry" placeholder="MM/YY" required>
+                    <label for="card-number">Card Number *</label>
+                    <input type="text" id="card-number" name="card_number" placeholder="•••• •••• •••• ••••" maxlength="19" required>
                 </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="card-expiry">Expiry (MM/YY) *</label>
+                        <input type="text" id="card-expiry" name="card_expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-cvc">CVC *</label>
+                        <input type="text" id="card-cvc" name="card_cvc" placeholder="3 digits" maxlength="4" required>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="card-cvc">安全碼 (CVC)</label>
-                    <input type="text" id="card-cvc" placeholder="CVC" required>
+                    <label for="card-name">Cardholder Name *</label>
+                    <input type="text" id="card-name" name="card_name" placeholder="Same as card" required>
                 </div>
             </div>
-            <button type="submit" id="confirm-payment-btn" class="payment-btn">確認付款</button>
+
+            <button type="submit" id="confirm-payment-btn" class="payment-btn" disabled>Confirm Payment</button>
         </form>
 
         <div id="message"></div>
-    </div>
-
-    <!-- 引入 JS 檔案 -->
+    </div>    
     <script src="js/modules/api.js"></script>
     <script src="js/modules/auth.js"></script>
+    <script src="js/modules/navigator.js"></script>
     <script src="js/modules/cart.js"></script>
     <script src="js/pages/payment.js"></script>
 </body>

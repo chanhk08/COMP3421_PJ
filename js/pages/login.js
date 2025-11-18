@@ -5,12 +5,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const { username, password } = Object.fromEntries(formData.entries());
     try {
         const result = await loginUser(username, password);
-        saveUserSession(result.user); // 儲存登入狀態
+        saveUserSession(result.user); // save login state
         messageDiv.style.color = 'green';
-        messageDiv.textContent = '登入成功！正在跳轉...';
+        messageDiv.textContent = 'Login successful! Redirecting...';
         setTimeout(() => window.location.href = 'index.html', 1000);
     } catch (error) {
         messageDiv.style.color = 'red';
-        messageDiv.textContent = '登入失敗: ' + error.message;
+        messageDiv.textContent = 'Login failed: ' + error.message;
     }
 });

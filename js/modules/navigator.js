@@ -23,11 +23,11 @@ function initNavigator(containerId) {
     if (currentUser) {
         // 已登入狀態
         navLinksContainer.innerHTML = `
-            <a href="index.html">商店首頁</a>
-            <a href="cart.html">購物車</a>
-            <a href="order_record.html">訂單紀錄</a>
-            <a href="user_profile.html" class="profile-link">歡迎, ${currentUser.username}</a>
-            <button id="logout-btn-nav">登出</button>
+            <a href="index.html">Home</a>
+            <a href="cart.html">Cart</a>
+            <a href="order_record.html">History</a>
+            <a href="user_profile.html" class="profile-link">Welcome, ${currentUser.username}</a>
+            <button id="logout-btn-nav">Logout</button>
         `;
         // 為登出按鈕綁定事件
         document.getElementById('logout-btn-nav').addEventListener('click', () => {
@@ -36,8 +36,8 @@ function initNavigator(containerId) {
     } else {
         // 未登入狀態
         navLinksContainer.innerHTML = `
-            <a href="login.html">登入</a>
-            <a href="register.html">註冊</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
         `;
     }
 }

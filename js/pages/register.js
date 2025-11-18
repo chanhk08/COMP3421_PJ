@@ -6,10 +6,10 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     try {
         const result = await registerUser(userData);
         messageDiv.style.color = 'green';
-        messageDiv.textContent = result.message + ' 正在跳轉至登入頁面...';
+        messageDiv.textContent = result.message + ' Redirecting to login...';
         setTimeout(() => window.location.href = 'login.html', 2000);
     } catch (error) {
         messageDiv.style.color = 'red';
-        messageDiv.textContent = '註冊失敗: ' + error.message;
+        messageDiv.textContent = 'Registration failed: ' + error.message;
     }
 });

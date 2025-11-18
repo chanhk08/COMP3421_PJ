@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const currentUser = getCurrentUser();
     if (!currentUser) {
-        // 如果未登入，跳轉到登入頁
         window.location.href = 'login.html';
         return;
     }
@@ -17,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // 載入並渲染購物車視圖
 async function loadCartView(userId) {
     const cartContainer = document.getElementById('cart-content');
-    cartContainer.innerHTML = '<p>正在載入您的購物車...</p>';
+    cartContainer.innerHTML = '<p>Loading...</p>';
     try {
         const items = await getCartItems(userId);
         renderCart(items, userId);
     } catch (error) {
-        cartContainer.innerHTML = `<p style="color:red;">載入購物車失敗: ${error.message}</p>`;
+        cartContainer.innerHTML = `<p style="color:red;">Shopping cart failed to load: ${error.message}</p>`;
     }
 }
 
@@ -30,17 +29,17 @@ async function loadCartView(userId) {
 function renderCart(items, userId) {
     const cartContainer = document.getElementById('cart-content');
     if (items.length === 0) {
-        cartContainer.innerHTML = '<div class="cart-empty"><p>您的購物車目前是空的。</p><a href="index.html">前往購物</a></div>';
+        cartContainer.innerHTML = '<div class="cart-empty"><p>Your shopping cart is empty.</p><a href="index.html">Go shopping</a></div>';
         return;
     }
     
     let totalAmount = 0;
     cartContainer.innerHTML = `
         <div class="cart-header">
-            <div class="cart-item-info">商品</div>
-            <div class="cart-item-price">單價</div>
-            <div class="cart-item-quantity">數量</div>
-            <div class="cart-item-total">小計</div>
+            <div class="cart-item-info">Item</div>
+            <div class="cart-item-price">Price</div>
+            <div class="cart-item-quantity">Quantity</div>
+            <div class="cart-item-total">Sub Totel</div>
             <div class="cart-item-actions"></div>
         </div>
     `;
@@ -67,10 +66,10 @@ function renderCart(items, userId) {
     // 加上總計和清空購物車按鈕
     cartContainer.innerHTML += `
         <div class="cart-footer">
-            <div><button class="clear-cart-btn">清空購物車</button></div>
+            <div><button class="clear-cart-btn">Emply Cart</button></div>
             <div class="checkout-actions">
-                <strong>總計: $${totalAmount.toFixed(2)}</strong>
-                <button id="checkout-btn">前往結帳</button>
+                <strong>Totel: $${totalAmount.toFixed(2)}</strong>
+                <button id="checkout-btn">Checkout</button>
             </div>
         </div>
     `;
@@ -88,7 +87,7 @@ function addCartEventListeners(userId) {
             await removeCartItem(userId, itemId);
             loadCartView(userId); // 重新載入購物車
         } else if (target.classList.contains('clear-cart-btn')) {
-            if (confirm('您確定要清空整個購物車嗎？')) {
+            if (confirm('Are you sure to emply the whole cart?')) {
                 await clearCart(userId);
                 loadCartView(userId); // 重新載入購物車
             }

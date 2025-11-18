@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Staff Order Details</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f4f4f9; margin: 0; }
+        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; }
+        h1 { text-align: center; }
+
+        .order-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .meta-item p { margin: 8px 0; font-size: 1em; }
+        .meta-item strong { color: #333; }
+        .meta-item span { color: #555; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background-color: #f8f9fa; font-weight: 600; }
+        td.align-right { text-align: right; font-weight: bold; }
+
+        .back-link { display: inline-block; margin-top: 30px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        button {
+            font-size: 1em;
+            background-color: #ff751f;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.25s ease;
+            margin: 5px 0px;
+        }
+        button:hover{
+            background-color: #c55b19;
+        }
+        select {
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 6px;
+            font-size: 1em;
+            margin: 0 5px;
+            width: 180px;
+        }
+        text{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content-area">
+        <div class="container">
+            <h1 id="order-title">Order Details</h1>
+
+            <div class="order-meta-grid">
+                <div class="meta-item">
+                    <p><strong>Order #: </strong> <span id="order-id"></span></p>
+                    <p><strong>Date:</strong> <span id="order-date"></span></p>
+                    <p><strong>Status:</strong> <span id="order-status"></span></p>
+                    <p><strong>Total:</strong> <span id="order-total"></span></p>
+                </div>
+                <div class="meta-item">
+                    <p><strong>Recipient Name:</strong> <span id="recipient-name"></span></p>
+                    <p><strong>Contact Phone:</strong> <span id="recipient-phone"></span></p>
+                    <p><strong>Shipping Address:</strong> <span id="shipping-address"></span></p>
+                    <p><strong>Remark:</strong> <span id="order-remark"></span></p>
+                </div>
+            </div>
+
+            <h2>Order Items</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th class="align-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="order-items-tbody">
+                    <!-- Items loaded dynamically -->
+                </tbody>
+            </table>
+
+            <a href="staff_home.html" class="back-link">Back to Orders</a>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="js/modules/api.js"></script>
+    <script src="js/modules/auth.js"></script>
+    <script type="module" src="js/pages/order-details-staff.js"></script>
+    <script src="js/modules/navigator.js"></script>
+    <!-- <script src="js/modules/footer.js"></script> -->
+</body>
+</html>

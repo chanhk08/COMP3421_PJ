@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+        }
+
+        /* 將表單設定成100%寬度，最大1000px可保持原先樣式 */
+        form#product-form {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        form#product-form label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        form#product-form input[type="text"],
+        form#product-form input[type="number"],
+        form#product-form input[type="url"],
+        form#product-form textarea {
+            width: 100%;
+            padding: 8px 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        form#product-form textarea {
+            height: 80px;
+        }
+
+        form#product-form input[readonly] {
+            background-color: #eaeaea;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        form#product-form button[type="submit"] {
+            background-color: #ff751f;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        form#product-form button[type="submit"]:hover {
+            background-color: #7b2f00;
+        }
+
+        /* 返回按鈕樣式 */
+        #back-btn {
+            display: block;
+            margin: 0 auto 20px auto; /* 上外距0，下外距20px，左右自動置中 */
+            background-color: #95a5a6;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #back-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        #message {
+            max-width: 1000px;
+            margin: 15px auto 0;
+            text-align: center;
+            font-weight: 600;
+        }
+        #category-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-content: space-between;
+            gap: 15px 10px; /* 上下/左右間距 */
+        }
+        
+        #category-checkboxes label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Details</h1>
+    <form id="product-form">
+        <div id="category-checkboxes">
+          <p>Select Categories:</p>
+          <!-- 用JS動態生成checkbox列表 -->
+        </div>
+        <label>Name: <input name="name" type="text" required /></label><br/>
+        <label>Description: <textarea name="description"></textarea></label><br/>
+        <label>Price: <input name="price" type="number" step="0.01" required /></label><br/>
+        <label>Stock Quantity: <input name="stock_quantity" type="number" required /></label><br/>
+        <label>Image URL: <input name="image_url" type="text" /></label><br/>
+        <label>Available<input type="checkbox" id="available" name="available" /></label>
+        <button type="submit">Add</button>
+    </form>
+    <button id="back-btn" onclick="history.back()">Back</button>
+    <div id="message"></div>
+
+    <script src="js/modules/api.js"></script>
+    <script src="js/pages/add-product-staff.js"></script>
+</body>
+</html>

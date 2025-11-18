@@ -1,34 +1,32 @@
 /**
- * js/modules/products.js
- * 處理商品展示與搜尋相關的前端邏輯
- */
-
-/**
  * 載入商品並顯示在頁面上
  * @param {string} [keyword=''] - 搜尋關鍵字，預設為空字串
  */
-async function loadAllProducts(keyword = '') {
+async function loadAllProducts(keyword = '', categoryIds = []) {
     const productListContainer = document.getElementById('product-list');
     if (!productListContainer) return;
 
     productListContainer.innerHTML = '<p>正在載入商品...</p>';
 
     try {
-        const queryParams = keyword ? { search: keyword } : {};
+        const queryParams = {};
+        if (keyword) queryParams.search = keyword;
+        if (categoryIds.length > 0) queryParams.categories = categoryIds.join(',');
+
         const products = await apiRequest('items.php', 'GET', queryParams);
-        
+
         productListContainer.innerHTML = '';
 
-        if (products.length === 0) {
+        const availableProducts = products.filter(product => product.available === 1 || product.available === true);
+        if (availableProducts.length === 0) {
             productListContainer.innerHTML = `<p>找不到符合條件的商品。</p>`;
             return;
         }
 
-        products.forEach(product => {
+        availableProducts.forEach(product => {
             const productCard = createProductCard(product);
             productListContainer.appendChild(productCard);
         });
-
     } catch (error) {
         productListContainer.innerHTML = `<p style="color: red;">載入商品失敗: ${error.message}</p>`;
     }
@@ -55,15 +53,15 @@ function createProductCard(product) {
         <h3 class="product-name">${product.name}</h3>
         <p class="product-price">$${parseFloat(product.price).toFixed(2)}</p>
         <span class="stock-status ${product.stock_quantity > 0 ? 'in-stock' : 'out-of-stock'}">
-            ${product.stock_quantity > 0 ? `有貨 (${product.stock_quantity})` : '售罄'}
+            ${product.stock_quantity > 0 ? `In stock (${product.stock_quantity})` : 'Sold out'}
         </span>
     `;
 
     // ★ 修改重點：「查看詳情」按鈕現在是一個連結
     const detailLink = document.createElement('a');
     detailLink.href = `product_detail.html?id=${product.item_id}`;
-    detailLink.className = 'view-detail-link'; // 使用新的 class 以便設定樣式
-    detailLink.textContent = '查看詳情';
+    detailLink.className = 'view-detail-link'; // use new class for styling
+    detailLink.textContent = 'View Details';
 
     // 將所有部分組合起來
     card.appendChild(imageLink);

@@ -1,87 +1,219 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的商店 - 商品列表</title>
+    <title>My Store - Product Listing</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        
-        /* --- 導覽列樣式 --- */
-        .product-info {
-            margin: 20px;
-        }
-
-        .view-detail-link {
-           display: block;
-           width: 100%;
-           padding: 12px 0;
-           margin-top: auto; /* 讓按鈕固定在卡片底部 */
-           background-color: #007bff;
-           color: white;
-           text-align: center;
-           text-decoration: none;
-           font-weight: bold;
-           transition: background-color 0.2s;
-        }
-        
-        view-detail-link:hover {
-           background-color: #0056b3;
-        }
-
-        
         .container { 
-            max-width: 1200px; 
+            display: flex;
             margin: 20px auto;
             padding: 0 20px;
+            gap: 30px;
+            display: flex;
+            flex-direction: column;
+            max-width: 1650px;
         }
-        .view-detail-link:hover {
-           background-color: #0056b3;
+
+        .container-2 { 
+            display: flex;
+            width: 100%;
+            gap: 30px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* --- Sidebar for Filters --- */
+        .filter-sidebar {
+            width: 250px;
+            flex-shrink: 0;
+        }
+        .filter-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filter-section h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        #category-filters .filter-group {
+            margin-bottom: 15px;
+        }
+        #category-filters .filter-group h4 {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        #category-filters .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #category-filters label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        #category-filters input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        /* --- Main Product Area --- */
+        .product-main {
+            flex-grow: 1;
         }
         h1 { text-align: center; color: #333; }
         .search-container { margin-bottom: 20px; }
-        #search-input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        #product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .product-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; }
-        .add-to-cart-btn { display: block; width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 1em; }
-        /* 其他樣式省略 */
+        #search-input { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 16px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+        }
+
+        /* --- Product Card --- */
+        #product-list { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+            gap: 20px; 
+        }
+        .product-card { 
+            background: #fff; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            transition: box-shadow 0.3s;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-info h3 {
+            font-size: 1.1em;
+            margin: 0 0 10px 0;
+        }
+        .product-info .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .add-to-cart-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #ff751f; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 1em;
+            margin-top: auto; /* Push button to the bottom */
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #c25917;
+        }
+        @media (max-width: 600px) {
+            .container-2 {
+                flex-direction: column;
+            }
+            .filter-sidebar {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== 導覽列 ===== -->
+    <!-- ===== Navigation Bar ===== -->
     <nav class="navbar">
-        <a href="index.html" class="logo">我的商店</a>
+        <a href="index.html" class="logo"><img src="images/logo_2.png" style="height: 75px; width: 150px;"></a>
         <div class="nav-links" id="nav-links">
-            <!-- 預設顯示登入/註冊連結 -->
-            <a href="login.html">登入</a>
-            <a href="register.html">註冊</a>
+            <!-- Default links -->
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
         </div>
     </nav>
 
+    <!-- ===== Main Content Area ===== -->
     <main class="main-content-area">
         <div class="container">
-            <h1>我們的商品</h1>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="搜尋商品名稱或描述...">
+            <h1>Our Products</h1>
+            <!-- ===== Sidebar for Filters ===== -->
+            <div class="container-2">
+               <aside class="filter-sidebar">
+                    <div class="filter-section">
+                        <h3>Filters</h3>
+                        <div id="category-filters">
+                            <!-- Category checkboxes will be dynamically inserted here by JS -->
+                            <div class="filter-group">
+                                <h4>Pet Type</h4>
+                                <div class="checkbox-group" id="filter-pet-type"></div>
+                            </div>
+                            <div class="filter-group">
+                                <h4>Product Type</h4>
+                                <div class="checkbox-group" id="filter-product-type"></div>
+                            </div>
+                            <div class="filter-group">
+                                <h4>Life Stage</h4>
+                                <div class="checkbox-group" id="filter-life-stage"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            
+                <!-- ===== Product Listing ===== -->
+                <section class="product-main">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search for product name or description...">
+                    </div>
+                    <div id="product-list">
+                        <!-- Products will be dynamically inserted here by JS -->
+                    </div>
+                </section>
+
+                <aside class="filter-sidebar">
+                     <!-- For layout space only -->
+                </aside>
+
             </div>
-            <div id="product-list"></div>
+            
         </div>
     </main>
 
+    <!-- ===== Footer ===== -->
     <div id="footer-container">
-        <!-- 頁尾將由 footer.js 動態填充 -->
+        <!-- Footer will be dynamically injected by footer.js -->
     </div>
 
-    <!-- 引入所有需要的模組 -->
+    <!-- Scripts -->
     <script src="js/modules/api.js"></script>
     <script src="js/modules/auth.js"></script>
     <script src="js/modules/cart.js"></script>
-    <script src="js/modules/products.js"></script>
+    <!-- <script src="js/modules/products.js"></script> -->
     <script src="js/modules/navigator.js"></script>
     <script src="js/modules/footer.js"></script>
-
-    <!-- 最後，引入此頁面專屬的啟動腳本 -->
-    <script src="js/pages/index.js"></script>
+    <script src="js/pages/index.js"></script> <!-- Page-specific script -->
 </body>
 </html>

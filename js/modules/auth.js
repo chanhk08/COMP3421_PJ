@@ -1,11 +1,6 @@
 /**
- * js/auth.js
- * 處理使用者註冊、登入、登出及個人資料管理
- */
-
-/**
- * 註冊新使用者
- * @param {object} userData - 包含 username, email, password 等的物件
+ * 
+ * @param {object} userData
  * @returns {Promise<any>}
  */
 async function registerUser(userData) {
@@ -13,7 +8,6 @@ async function registerUser(userData) {
 }
 
 /**
- * 使用者登入
  * @param {string} username 
  * @param {string} password 
  * @returns {Promise<any>}
@@ -23,7 +17,15 @@ async function loginUser(username, password) {
 }
 
 /**
- * 獲取使用者個人資料
+ * @param {string} username 
+ * @param {string} password 
+ * @returns {Promise<any>}
+ */
+async function loginUserStaff(username, password) {
+    return await apiRequest('login_staff.php', 'POST', { username, password });
+}
+
+/**
  * @param {number} userId 
  * @returns {Promise<any>}
  */
@@ -32,9 +34,8 @@ async function getUserProfile(userId) {
 }
 
 /**
- * 更新使用者個人資料
  * @param {number} userId 
- * @param {object} profileData - 包含 full_name, address 等要更新的資料
+ * @param {object} profileData
  * @returns {Promise<any>}
  */
 async function updateUserProfile(userId, profileData) {
@@ -42,27 +43,21 @@ async function updateUserProfile(userId, profileData) {
 }
 
 /**
- * 將使用者登入狀態儲存到瀏覽器
- * @param {object} user - 從登入 API 回傳的使用者物件
+ * @param {object} user
  */
 function saveUserSession(user) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
 }
 
 /**
- * 從瀏覽器獲取當前登入的使用者資訊
  * @returns {object|null}
  */
 function getCurrentUser() {
-    const user = localStorage.getItem('currentUser');
+    const user = sessionStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
 }
 
-/**
- * 登出使用者
- */
 function logoutUser() {
-    localStorage.removeItem('currentUser');
-    // 重定向到登入頁面
+    sessionStorage.removeItem('currentUser');
     window.location.href = 'login.html';
 }
