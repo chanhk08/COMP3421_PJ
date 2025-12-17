@@ -28,6 +28,7 @@ function initFooter(containerId) {
                 <div class="footer-section">
                     <h4>Contact Us</h4>
                     <p>Email: <a href="mailto:25024246d@connect.polyu.hk">25024246d@connect.polyu.hk</a></p>
+                    <p>Email: <a href="mailto:25024246d@connect.polyu.hk">25023164d@connect.polyu.hk</a></p>
                     <p>Phone: (852) 1234-5678</p>
                 </div>
             </div>
