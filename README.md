@@ -1,5 +1,4 @@
 # Pet Shop E-Commerce Platform
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/chanhk08/COMP3421_PJ)
 
 This repository contains the source code for a full-stack e-commerce web application for a pet supply store. The project features distinct portals for customers and staff, each with a tailored set of functionalities. It is built using PHP for the backend, MySQL for the database, and vanilla JavaScript for a dynamic frontend experience.
 
